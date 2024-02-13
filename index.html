@@ -21,6 +21,8 @@
     <button id="draw">Draw</button>
     <canvas id="canvas" width="400" height="400"></canvas>
     <button id="submit" style="display: none;">Submit</button>
+    <button id="clear" style="display: none;">Clear</button>
+
 
     <input type="color" id="penColor" value="#000000">
     
@@ -154,7 +156,16 @@
         ctx.beginPath();
         ctx.moveTo(x, y);
     }
+  document.getElementById('submit').addEventListener('click', () => {
+        const dataUrl = canvas.toDataURL();
+        document.getElementById(`page${currentPage}`).style.backgroundImage = `url(${dataUrl})`;
+        document.getElementById('submit').style.display = 'none';
+    });
 
+    // Add a new button for clearing the canvas
+    document.getElementById('clear').addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
     </script>
 </body>
 </html>
