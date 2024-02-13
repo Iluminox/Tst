@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #book { position: relative; height: 300px; width: 200px; }
+        .page { position: absolute; height: 100%; width: 100%; background: white; border: 1px solid black; }
+        #canvas { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    </style>
+</head>
+<body>
+    <div id="book">
+        <div class="page" id="page1"></div>
+        <div class="page" id="page2" style="display: none;"></div>
+        <!-- Add more pages as needed -->
+    </div>
+    <button id="prevPage">Previous Page</button>
+    <button id="nextPage">Next Page</button>
+    <button id="draw">Draw</button>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <button id="submit" style="display: none;">Submit</button>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 2; // Update this to the total number of pages
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                document.getElementById(`page${currentPage}`).style.display = 'none';
+                currentPage--;
+                document.getElementById(`page${currentPage}`).style.display = 'block';
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                document.getElementById(`page${currentPage}`).style.display = 'none';
+                currentPage++;
+                document.getElementById(`page${currentPage}`).style.display = 'block';
+            }
+        });
+
+        document.getElementById('draw').addEventListener('click', () => {
+            canvas.style.display = 'block';
+            document.getElementById('submit').style.display = 'block';
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            draw(e);
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+            ctx.beginPath();
+        });
+
+        canvas.addEventListener('mousemove', draw);
+
+        function draw(e) {
+            if (!drawing) return;
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+
+            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        }
+
+        document.getElementById('submit').addEventListener('click', () => {
+            const dataUrl = canvas.toDataURL();
+            document.getElementById(`page${currentPage}`).style.backgroundImage = `url(${dataUrl})`;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = 'none';
+            document.getElementById('submit').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
