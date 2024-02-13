@@ -11,7 +11,7 @@
     </style>
 </head>
 <body>
-    <div id="book">
+   <div id="book">
         <div class="page" id="page1"></div>
         <div class="page" id="page2" style="display: none;"></div>
         <!-- Add more pages as needed -->
@@ -91,6 +91,23 @@
             canvas.style.display = 'none';
             document.getElementById('submit').style.display = 'none';
         });
+
+        function draw(e) {
+            if (!drawing) return;
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+
+            let x = e.type.startsWith('touch') ? e.touches[0].pageX - canvas.offsetLeft : e.pageX - canvas.offsetLeft;
+            let y = e.type.startsWith('touch') ? e.touches[0].pageY - canvas.offsetTop : e.pageY - canvas.offsetTop;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        // ... existing JavaScript ...
     </script>
 </body>
 </html>
