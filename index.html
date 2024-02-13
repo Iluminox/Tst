@@ -50,17 +50,15 @@
             document.getElementById('submit').style.display = 'block';
         });
 
-        canvas.addEventListener('mousedown', (e) => {
+        function startDrawing(e) {
             drawing = true;
             draw(e);
-        });
+        }
 
-        canvas.addEventListener('mouseup', () => {
+        function stopDrawing() {
             drawing = false;
             ctx.beginPath();
-        });
-
-        canvas.addEventListener('mousemove', draw);
+        }
 
         function draw(e) {
             if (!drawing) return;
@@ -68,11 +66,22 @@
             ctx.lineCap = 'round';
             ctx.strokeStyle = 'black';
 
-            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.lineTo(e.clientX - canvas.offsetLeft || e.touches[0].clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop || e.touches[0].clientY - canvas.offsetTop);
             ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.moveTo(e.clientX - canvas.offsetLeft || e.touches[0].clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop || e.touches[0].clientY - canvas.offsetTop);
         }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('touchstart', startDrawing);
+
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('touchcancel', stopDrawing);
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchmove', draw);
 
         document.getElementById('submit').addEventListener('click', () => {
             const dataUrl = canvas.toDataURL();
