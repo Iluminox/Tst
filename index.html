@@ -2,9 +2,12 @@
 <html>
 <head>
     <style>
-        #book { position: relative; height: 300px; width: 200px; }
-        .page { position: absolute; height: 100%; width: 100%; background: white; border: 1px solid black; }
-        #canvas { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; }
+        #book { position: relative; height: 300px; width: 200px; margin: 50px auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .page { position: absolute; height: 100%; width: 100%; background: white; border: 1px solid #ddd; padding: 20px; box-sizing: border-box; }
+        #canvas { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid #ddd; }
+        button { display: inline-block; background: #2980b9; color: white; border: none; padding: 10px 20px; margin: 10px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #3498db; }
     </style>
 </head>
 <body>
@@ -20,7 +23,7 @@
     <button id="submit" style="display: none;">Submit</button>
 
     <script>
-        let currentPage = 1;
+      let currentPage = 1;
         const totalPages = 2; // Update this to the total number of pages
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
