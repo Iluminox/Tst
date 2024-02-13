@@ -8,6 +8,14 @@
         #canvas { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid #ddd; }
         button { display: inline-block; background: #2980b9; color: white; border: none; padding: 10px 20px; margin: 10px; border-radius: 5px; cursor: pointer; }
         button:hover { background: #3498db; }
+             .drawing {
+            position: absolute;
+            background-repeat: no-repeat;
+            background-size: contain;
+            cursor: move;
+            resize: both;
+            overflow: auto;
+        }
     </style>
 </head>
 <body>
@@ -154,7 +162,60 @@
         ctx.beginPath();
         ctx.moveTo(x, y);
     }
+document.getElementById('submit').addEventListener('click', () => {
+            const dataUrl = canvas.toDataURL();
 
+            // Create a new div to represent the drawing
+            const drawing = document.createElement('div');
+            drawing.classList.add('drawing');
+            drawing.style.backgroundImage = `url(${dataUrl})`;
+            drawing.style.width = '100px';
+            drawing.style.height = '100px';
+
+            // Add the drawing to the current page
+            document.getElementById(`page${currentPage}`).appendChild(drawing);
+
+            // Make the drawing draggable
+            drawing.addEventListener('mousedown', dragStart);
+            drawing.addEventListener('mouseup', dragEnd);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = 'none';
+            document.getElementById('submit').style.display = 'none';
+        });
+
+        let activeDrawing = null;
+        let initialX = 0;
+        let initialY = 0;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        function dragStart(e) {
+            initialX = e.clientX - offsetX;
+            initialY = e.clientY - offsetY;
+
+            if (e.target === activeDrawing) {
+                activeDrawing.addEventListener('mousemove', drag);
+            }
+        }
+
+        function dragEnd() {
+            initialX = currentX;
+            initialY = currentY;
+            activeDrawing.removeEventListener('mousemove', drag);
+        }
+
+        function drag(e) {
+            e.preventDefault();
+
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+
+            offsetX = currentX;
+            offsetY = currentY;
+
+            activeDrawing.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        }
     </script>
 </body>
 </html>
