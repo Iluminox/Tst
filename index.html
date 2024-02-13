@@ -2,7 +2,7 @@
 <html>
 <head>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; }
+   body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; }
         #book { position: relative; height: 300px; width: 200px; margin: 50px auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         .page { position: absolute; height: 100%; width: 100%; background: white; border: 1px solid #ddd; padding: 20px; box-sizing: border-box; }
         #canvas { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid #ddd; }
@@ -22,8 +22,10 @@
     <canvas id="canvas" width="400" height="400"></canvas>
     <button id="submit" style="display: none;">Submit</button>
 
+    <input type="color" id="penColor" value="#000000">
+    
     <script>
-      let currentPage = 1;
+       let currentPage = 1;
         const totalPages = 2; // Update this to the total number of pages
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -107,7 +109,20 @@
             ctx.moveTo(x, y);
         }
 
-        // ... existing JavaScript ...
+        function draw(e) {
+            if (!drawing) return;
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = document.getElementById('penColor').value;
+
+            let x = e.type.startsWith('touch') ? e.touches[0].pageX - canvas.offsetLeft : e.pageX - canvas.offsetLeft;
+            let y = e.type.startsWith('touch') ? e.touches[0].pageY - canvas.offsetTop : e.pageY - canvas.offsetTop;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
     </script>
 </body>
 </html>
